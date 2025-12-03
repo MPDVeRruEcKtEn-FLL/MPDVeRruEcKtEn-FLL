@@ -915,6 +915,43 @@ class DriveBase:
             self.COLORSENS = devices[0]
         return devices
 
+    def detect_all_devices(self) -> dict[int, str]:
+        """Detect all connected devices on all ports
+
+        Scan all ports and identify which type of device is connected to each port.
+
+        Scanne alle Ports und identifiziere, welche Art von Gerät an jedem Port angeschlossen ist.
+
+        Returns / Ausgabe
+        -----
+        dict[int, str]
+            A dictionary mapping port numbers to device types ('motor', 'color_sensor', or 'none'). \n
+            Ein Dictionary, das Portnummern zu Gerätetypen zuordnet ('motor', 'color_sensor' oder 'none').
+        """
+        devices = {}
+        for port in range(6):
+            device_type = 'none'
+            
+            # Check for motor
+            try:
+                motor.relative_position(port)
+                device_type = 'motor'
+            except:
+                pass
+            
+            # Check for color sensor
+            if device_type == 'none':
+                try:
+                    color_sensor.rgbi(port)
+                    device_type = 'color_sensor'
+                except:
+                    pass
+            
+            devices[port] = device_type
+        
+        Logger.debug("Device scan: {}".format(devices))
+        return devices
+
     def get_addition_state(self) -> bool:
         """
         Return the state of the addition. \n
