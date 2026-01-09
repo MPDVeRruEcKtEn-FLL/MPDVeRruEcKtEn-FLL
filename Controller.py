@@ -1,4 +1,4 @@
-
+# LEGO slot:0
 
 import hub # type: ignore
 import motor  # type: ignore
@@ -95,11 +95,14 @@ class Controller:
     
     
     def drive_forward(self):
-        self.driveBase.drive_distance(10, 900, 800)
+        self.driveBase.turn_to_angle(90, maxspeed=1110, minspeed=800)
+        # self.driveBase.drive_distance(10, 900, 800)
     ###
 
 
 ctrl = Controller()
+
+ctrl.driveBase.configure_pid(1, 1, 1)
 
 
 def main():

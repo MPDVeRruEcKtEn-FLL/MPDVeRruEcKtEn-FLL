@@ -26,6 +26,10 @@ class DriveBase:
     TANKTURN = 0
     LEFTTURN = 1
     RIGHTTURN = 2
+    
+    PREGLER = False
+    IREGLER = False
+    DREGLER = False
 
     # CONFIGS
 
@@ -47,6 +51,37 @@ class DriveBase:
         self.gyroSens.reset_yaw(initial_yaw * -10)
 
         motor_pair.pair(self.MOTPAIR, self.MOTORL, self.MOTORR)
+        
+    def configure_pid(
+        self,
+        p_regler: float = PREGLER,
+        i_regler: float = IREGLER,
+        d_regler: float = DREGLER
+    ):
+        """Configure PID Constants
+        Configure PID Constants
+        
+        Konfiguriere PID Konstanten
+        
+        Parameters / Parameter
+        -----------------
+
+        #### p_regler: float = PREGLER
+            The P-Constant
+            Die P Konstante
+        
+        #### i_regler: float = IREGLER
+            The I-Constant
+            Die I Konstante
+            
+        #### d_regler: float = DREGLER
+            The D-Constant
+            Die D Konstante
+        """
+        
+        self.PREGLER = p_regler
+        self.IREGLER = i_regler
+        self.DREGLER = d_regler
 
     def configure(
         self,
@@ -334,7 +369,7 @@ class DriveBase:
         """
 
         def get_gyro_value():
-            return -self.gyroSens.tilt_angles()[0] / 10
+            return self.gyroSens.tilt_angles()[0] / 10
 
         def error() -> float:
             raw_error = target_angle - get_gyro_value()
@@ -1113,12 +1148,23 @@ class DriveBase:
                 + 2.14583333e-16 * speed**6
             )
 
-        if speed > 0:
-            pids = (pRegler(), iRegler(), 1)
+        if not self.PREGLER:
+            p_regler = pRegler()
         else:
-            pids = (pRegler(), iRegler(), 1)
+            p_regler = self.PREGLER
+            
+        if not self.IREGLER:
+            i_regler = iRegler()
+        else:
+            i_regler = self.IREGLER
+            
+        if not self.DREGLER:
+            d_regler = 1
+        else:
+            d_regler = self.DREGLER
+        
 
-        return pids
+        return (p_regler, i_regler, d_regler)
 
     def collided(self, cycl, start_cycl, gate: int = 300):
         diff = cycl - start_cycl
