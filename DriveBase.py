@@ -37,7 +37,7 @@ class DriveBase:
 
     MOTPAIR = 0
 
-    WHEELCIRC = 17.6 / 5 # Übersetzung von [Motor:Rad] 1:5
+    WHEELCIRC = 17.6 / (24/8) # Übersetzung von 3 [Rad:Motor] 24:8
 
     def __init__(self, initial_yaw: int = 0):
         self.gyroSens = hub.motion_sensor
@@ -162,6 +162,8 @@ class DriveBase:
         """
         motor.reset_relative_position(self.MOTORL, 0)
         motor.reset_relative_position(self.MOTORR, 0)
+        mainspeed = -mainspeed
+        stopspeed = -stopspeed
 
         def get_gyro_value() -> float:
             return -self.gyroSens.tilt_angles()[0] / 10

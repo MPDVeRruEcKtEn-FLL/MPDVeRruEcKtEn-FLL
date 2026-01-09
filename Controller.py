@@ -1,4 +1,4 @@
-# LEGO slot:0 autostart
+
 
 import hub # type: ignore
 import motor  # type: ignore
@@ -95,7 +95,7 @@ class Controller:
     
     
     def drive_forward(self):
-        self.driveBase.drive_distance(10)
+        self.driveBase.drive_distance(10, 900, 800)
     ###
 
 
