@@ -37,7 +37,7 @@ class DriveBase:
 
     MOTPAIR = 0
 
-    WHEELCIRC = 17.6
+    WHEELCIRC = 17.6 / 5 # Übersetzung von [Motor:Rad] 1:5
 
     def __init__(self, initial_yaw: int = 0):
         self.gyroSens = hub.motion_sensor
